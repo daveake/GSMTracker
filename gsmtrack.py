@@ -11,10 +11,11 @@ def CalculateDistance(Latitude1, Longitude1, Latitude2, Longitude2):
 
 	return 6371000 * math.acos(math.sin(Latitude2) * math.sin(Latitude1) + math.cos(Latitude2) * math.cos(Latitude1) * math.cos(Longitude1-Longitude1))
 	
-if len(sys.argv) < 2:
+if len(sys.argv) < 3:
 	print ""
-	print "Usage: python gsmtrack.py <phone_number> [gateway_number]"
+	print "Usage: python gsmtrack.py <payload_ID> <phone_number> [gateway_number]"
 	print ""
+	print "payload_ID is the payload ID to include in text messages."
 	print "phone_number is the number of a mobile phone to send texts to."
 	print "gateway_number (optional) is the number of a gateway to send texts to."
 	print ""
@@ -25,10 +26,11 @@ if len(sys.argv) < 2:
 	print ""
 	quit()
 	
-MobileNumber = sys.argv[1]
+PayloadID = sys.argv[1]
+MobileNumber = sys.argv[2]
 print "Texts will be sent to mobile phone " + MobileNumber
-if len(sys.argv) > 2:
-	GatewayNumber = sys.argv[2]
+if len(sys.argv) > 3:
+	GatewayNumber = sys.argv[3]
 	print "Texts will be sent to gateway number " + GatewayNumber
 else:
 	GatewayNumber = None
@@ -114,14 +116,14 @@ while True:
 					PreviousLongitude = Longitude
 			
 					# Text to my mobile
-					Message = 'Tracker position: ' + UTC + ', ' + str(Latitude) + ', ' + str(Longitude) + ', ' + str(int(Altitude)) + ' http://maps.google.com/?q=' + str(Latitude) + ',' + str(Longitude)
+					Message = PayloadID + ' position: ' + UTC + ', ' + str(Latitude) + ', ' + str(Longitude) + ', ' + str(int(Altitude)) + ' http://maps.google.com/?q=' + str(Latitude) + ',' + str(Longitude)
 					print "Sending to mobile " + MobileNumber + ": " + Message
 					gsm.send_sms(MobileNumber, Message)
 
 					# Text to my gateway
 					if GatewayNumber:
 						print ("Sending text to gateway")
-						Message = 'HAB:GSM,1,' + UTC + ',' + str(Latitude) + ',' + str(Longitude) + ',' + str(int(Altitude))
+						Message = 'HAB:' + PayloadID + ',1,' + UTC + ',' + str(Latitude) + ',' + str(Longitude) + ',' + str(int(Altitude))
 						print "Sending to gateway " + GatewayNumber + ": " + Message
 						gsm.send_sms(GatewayNumber, Message)
 				
