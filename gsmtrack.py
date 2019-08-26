@@ -9,7 +9,7 @@ def CalculateDistance(Latitude1, Longitude1, Latitude2, Longitude2):
 	Latitude2 = Latitude2 * math.pi / 180
 	Longitude2 = Longitude2 * math.pi / 180
 
-	return 6371000 * math.acos(math.sin(Latitude2) * math.sin(Latitude1) + math.cos(Latitude2) * math.cos(Latitude1) * math.cos(Longitude1-Longitude1))
+	return 6371000 * math.acos(math.sin(Latitude2) * math.sin(Latitude1) + math.cos(Latitude2) * math.cos(Latitude1) * math.cos(Longitude2-Longitude1))
 	
 if len(sys.argv) < 3:
 	print ""
